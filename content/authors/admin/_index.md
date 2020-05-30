@@ -1,6 +1,6 @@
 ---
 # Display name
-title: Nelson Bighetti
+title: Gonum Numerical Packages
 
 # Username (this should match the folder name)
 authors:
@@ -10,32 +10,15 @@ authors:
 superuser: true
 
 # Role/position
-role: Professor of Artificial Intelligence
+role: Consistent, composable, and comprehensible scientific code
 
 # Organizations/Affiliations
 organizations:
-- name: Stanford University
+- name: ""
   url: ""
 
 # Short bio (displayed in user profile at end of posts)
-bio: My research interests include distributed robotics, mobile computing and programmable matter.
-
-interests:
-- Artificial Intelligence
-- Computational Linguistics
-- Information Retrieval
-
-education:
-  courses:
-  - course: PhD in Artificial Intelligence
-    institution: Stanford University
-    year: 2012
-  - course: MEng in Artificial Intelligence
-    institution: Massachusetts Institute of Technology
-    year: 2009
-  - course: BSc in Artificial Intelligence
-    institution: Massachusetts Institute of Technology
-    year: 2008
+bio: ""
 
 # Social/Academic Networking
 # For available icons, see: https://sourcethemes.com/academic/docs/page-builder/#icons
@@ -44,16 +27,16 @@ education:
 social:
 - icon: envelope
   icon_pack: fas
-  link: '#contact'  # For a direct email link, use "mailto:test@example.org".
-- icon: twitter
-  icon_pack: fab
-  link: https://twitter.com/GeorgeCushen
-- icon: google-scholar
-  icon_pack: ai
-  link: https://scholar.google.co.uk/citations?user=sIwtMXoAAAAJ
+  link: "mailto:gonum-dev@googlegroups.com"  # For a form, use  '#contact'
+#- icon: twitter
+#  icon_pack: fab
+#  link: https://twitter.com/gonum
+#- icon: google-scholar
+#  icon_pack: ai
+#  link: ""
 - icon: github
   icon_pack: fab
-  link: https://github.com/gcushen
+  link: https://github.com/gonum
 # Link to a PDF of your resume/CV from the About widget.
 # To enable, copy your resume/CV to `static/files/cv.pdf` and uncomment the lines below.
 # - icon: cv
@@ -70,6 +53,25 @@ user_groups:
 - Visitors
 ---
 
-Nelson Bighetti is a professor of artificial intelligence at the Stanford AI Lab. His research interests include distributed robotics, mobile computing and programmable matter. He leads the Robotic Neurobiology group, which develops self-reconfiguring robots, systems of self-organizing robots, and mobile sensor networks.
+Gonum is a set of packages designed to make writing numerical and scientific
+algorithms productive, performant, and scalable.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique placerat feugiat ac, facilisis vitae arcu. Proin eget egestas augue. Praesent ut sem nec arcu pellentesque aliquet. Duis dapibus diam vel metus tempus vulputate.
+Gonum contains libraries for [matrices and linear algebra](https://godoc.org/gonum.org/v1/gonum/mat);
+[statistics](https://godoc.org/gonum.org/v1/gonum/stat), 
+[probability](https://godoc.org/gonum.org/v1/gonum/stat/distuv) 
+[distributions](https://godoc.org/gonum.org/v1/gonum/stat/distmv), 
+and [sampling](https://godoc.org/gonum.org/v1/gonum/stat/sampleuv); tools for
+[function differentiation](https://godoc.org/gonum.org/v1/gonum/diff/fd), 
+[integration](https://godoc.org/gonum.org/v1/gonum/integrate/quad),
+and [optimization](https://godoc.org/gonum.org/v1/gonum/optimize);
+[network](https://godoc.org/gonum.org/v1/gonum/graph) creation and analysis; and more.
+
+We encourage you to [get started](http://gonum.org/post/introtogonum/) with Go and Gonum if
+
+* You are tired of sluggish performance, and fighting C and vectorization.
+* You are struggling with managing programs as they grow larger.
+* You struggle to re-use -- even the code you tried to make reusable.
+* You would like easy access to parallel computing.
+* You want code to be fully transparent, and want the ability to read the source code you use.
+* You'd like a compiler to catch mistakes early, but hate fighting linker and unintelligible compile errors.
+
