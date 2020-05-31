@@ -37,6 +37,9 @@ social:
 - icon: github
   icon_pack: fab
   link: https://github.com/gonum
+- icon: book
+  icon_pack: fa
+  link: https://pkg.go.dev/mod/gonum.org/v1/gonum
 # Link to a PDF of your resume/CV from the About widget.
 # To enable, copy your resume/CV to `static/files/cv.pdf` and uncomment the lines below.
 # - icon: cv
