@@ -1,0 +1,16 @@
+Please take a look.
+
+<!--
+Checklist:
+
+- the changes have been discussed
+- linked to relevant issues
+- you agree to license the change under CC BY-SA or have included an
+  alternative copyright notice in the front matter of any original
+  contribution
+
+Please make sure your commit message summary line and pull request
+title match the Go convention; a one-line summary of the change,
+prefixed by the primary affected package that should complete the
+sentence, "This change modifies Gonum to _____."
+-->
