@@ -69,7 +69,7 @@ and [sampling](https://godoc.org/gonum.org/v1/gonum/stat/sampleuv); tools for
 and [optimization](https://godoc.org/gonum.org/v1/gonum/optimize);
 [network](https://godoc.org/gonum.org/v1/gonum/graph) creation and analysis; and more.
 
-We encourage you to [get started](http://gonum.org/post/intro_to_gonum/) with Go and Gonum if
+We encourage you to [get started](post/intro_to_gonum) with Go and Gonum if
 
 * You are tired of sluggish performance, and fighting C and vectorization.
 * You are struggling with managing programs as they grow larger.
