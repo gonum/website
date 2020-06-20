@@ -161,7 +161,7 @@ sharing = true
 
 # Show a copyright license from creativecommons.org in the site footer?
 # Page specific copyright licenses are also possible by adding this option to a page's front matter.
-copyright_license = {enable = false, allow_derivatives = false, share_alike = true, allow_commercial = false, notice = "This work is licensed under the Gonum License"}
+copyright_license = {enable = true, allow_derivatives = true, share_alike = true, allow_commercial = true, notice = "Content is available under Creative Commons Attribution-ShareAlike 4.0 license unless otherwise noted."}
 
 # Link authors to their profile page? (true/false)
 link_authors = true
