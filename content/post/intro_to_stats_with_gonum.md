@@ -15,9 +15,9 @@ This first post is based off the content of this blog post:
 
  https://mubaris.com/posts/statistics/
 
-but using [Go](https://golang.org) and [Gonum](https://gonum.org) instead of Python and NumPy.
+but using [Go](https://golang.org) and [Gonum](/) instead of Python and NumPy.
 
-[Gonum](https://gonum.org) is _"a set of packages designed to make writing numerical and scientific algorithms productive, performant and scalable."_
+[Gonum](/) is _"a set of packages designed to make writing numerical and scientific algorithms productive, performant and scalable."_
 Please refer to this [post](/post/intro_to_gonum) for more details on Gonum.
 
 # Gonum and statistics
