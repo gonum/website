@@ -49,7 +49,7 @@ tall
 TAIL
 ```
 
-An obvious way to resolve this kind of problem mechanically is to represent the word ladder as a path walk through a graph where words are nodes and edges exist between words with a [Hamming distance](https://en.wikipedia.org/wiki/Hamming_distance) of one. With this representation we can then find the shortest path between the start and end words using something like [Dijkstra's shortest path algorithm](https://en.wikipedia.org/wiki/Dijkstra's_algorithm).
+An obvious way to resolve this kind of problem mechanically is to represent the word ladder as a path walk through a graph where the nodes are words and edges exist between words with a [Hamming distance](https://en.wikipedia.org/wiki/Hamming_distance) of one. With this representation we can then find the shortest path between the start and end words using something like [Dijkstra's shortest path algorithm](https://en.wikipedia.org/wiki/Dijkstra's_algorithm).
 
 Gonum provides routines for finding shortest paths in the [`graph/path`](https://pkg.go.dev/gonum.org/v1/gonum/graph/path?tab=doc) package. These functions take a [`graph.Graph`](https://pkg.go.dev/gonum.org/v1/gonum/graph?tab=doc#Graph) or [`traverse.Graph`](https://pkg.go.dev/gonum.org/v1/gonum/graph/traverse?tab=doc#Graph) interface type. The use of interface types for representing graphs in Gonum provides a lot of flexibility for representing interesting problems, but also comes with a cost of known how to implement the concrete type correctly or how and when to use [the concrete graph types that we provide](https://pkg.go.dev/gonum.org/v1/gonum/graph/simple?tab=doc).
 
