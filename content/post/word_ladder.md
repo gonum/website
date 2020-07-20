@@ -548,7 +548,7 @@ tail
 0.04u 0.00s 0.05r 6472kB ./words-2 -first head -last tail
 ```
 
-A [simpler version of this](/code/word_ladders/words-2f.go), that calculates a slice of neighbours for each `From` call exists,
+A [simpler version of this](/code/word_ladders/words-2f.go) exists, that calculates a slice of neighbours for each `From` call,
 ```
 func (g wordGraph) From(id int64) graph.Nodes {
 	if uint64(id) >= uint64(len(g.words)) {
