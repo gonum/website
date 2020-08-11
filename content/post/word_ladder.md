@@ -360,7 +360,7 @@ tail
 0.07u 0.01s 0.06r 9008kB ./words-1 -first head -last tail
 ```
 
-If you have run the code, you will notice that you won't necessarily get the word ladder matching the one here; there are multiple co-equal shorest paths between "head" and "tail". `gonum/path` provides a way to find all shortest paths between a pair of node which requires only a minor alteration of the code. Instead of calling `path.DijkstraFrom` we'll use [`path.DijkstraAllFrom`](https://pkg.go.dev/gonum.org/v1/gonum/graph/path?tab=doc#DijkstraAllFrom) and loop over the slice of paths returned by [`pth.AllTo`](https://pkg.go.dev/gonum.org/v1/gonum/graph/path?tab=doc#DijkstraAllFrom.AllTo).
+If you have run the code, you will notice that you won't necessarily get the word ladder matching the one here; there are multiple co-equal shortest paths between "head" and "tail". `gonum/path` provides a way to find all shortest paths between a pair of node which requires only a minor alteration of the code. Instead of calling `path.DijkstraFrom` we'll use [`path.DijkstraAllFrom`](https://pkg.go.dev/gonum.org/v1/gonum/graph/path?tab=doc#DijkstraAllFrom) and loop over the slice of paths returned by [`pth.AllTo`](https://pkg.go.dev/gonum.org/v1/gonum/graph/path?tab=doc#DijkstraAllFrom.AllTo).
 
 ```
 	pth := path.DijkstraAllFrom(wg.nodeFor(*first), wg)
@@ -547,6 +547,8 @@ nail
 tail
 0.04u 0.00s 0.05r 6472kB ./words-2 -first head -last tail
 ```
+
+Note that unlike the previous implementation for a single shortest path, this implementation will always output the same result since the `*neighbours` iterator here is completely deterministic.
 
 A [simpler version of this](/code/word_ladders/words-2f.go) exists, that calculates a slice of neighbours for each `From` call,
 ```
