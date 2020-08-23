@@ -684,6 +684,6 @@ $ xtime ./words-6 -n 4 </usr/share/dict/words >/dev/null
 
 For the record, the doublet here is "stow" and "dave", with 419 solutions.
 
-The full code for each of the word ladder programs is available from the link in the text. It depends on Gonum version 0.8 which added the `path.DijkstraAllFrom` function.
+The full code for each of the word ladder programs is available from the link in the text. It depends on Gonum version 0.8.1 which added the `path.DijkstraAllFrom` function.
 
 *By Dan Kortschak*
