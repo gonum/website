@@ -16,7 +16,7 @@ caption = ""
 +++
 
 <!--
-List of of word ladder doublets from Martin Gardiner's article.
+List of word ladder doublets from Martin Gardiner's article.
 
 rogue beast
 shoes crust
@@ -51,11 +51,11 @@ TAIL
 
 An obvious way to resolve this kind of problem mechanically is to represent the word ladder as a path walk through a graph where the nodes are words and edges exist between words with a [Hamming distance](https://en.wikipedia.org/wiki/Hamming_distance) of one. With this representation we can then find the shortest path between the start and end words using something like [Dijkstra's shortest path algorithm](https://en.wikipedia.org/wiki/Dijkstra's_algorithm).
 
-Gonum provides routines for finding shortest paths in the [`graph/path`](https://pkg.go.dev/gonum.org/v1/gonum/graph/path?tab=doc) package. These functions take a [`graph.Graph`](https://pkg.go.dev/gonum.org/v1/gonum/graph?tab=doc#Graph) or [`traverse.Graph`](https://pkg.go.dev/gonum.org/v1/gonum/graph/traverse?tab=doc#Graph) interface type. The use of interface types for representing graphs in Gonum provides a lot of flexibility for representing interesting problems, but also comes with a cost of known how to implement the concrete type correctly or how and when to use [the concrete graph types that we provide](https://pkg.go.dev/gonum.org/v1/gonum/graph/simple?tab=doc).
+Gonum provides routines for finding shortest paths in the [`graph/path`](https://pkg.go.dev/gonum.org/v1/gonum/graph/path?tab=doc) package. These functions take a [`graph.Graph`](https://pkg.go.dev/gonum.org/v1/gonum/graph?tab=doc#Graph) or [`traverse.Graph`](https://pkg.go.dev/gonum.org/v1/gonum/graph/traverse?tab=doc#Graph) interface type. The use of interface types for representing graphs in Gonum provides a lot of flexibility for representing interesting problems, but also comes with a cost of knowing how to implement the concrete type correctly or how and when to use [the concrete graph types that we provide](https://pkg.go.dev/gonum.org/v1/gonum/graph/simple?tab=doc).
 
-It is worth noting that the simple graph package is included primarily to allow Gonum graph functions to be tested (a multigraph equivalent [`graph/multi`](https://pkg.go.dev/gonum.org/v1/gonum/graph/multi?tab=doc) exists for the same purpose), and that the graph implementations provided may not the most efficient implementation for any particular graph-based problem; they are reasonably good, generally applicable and relatively simple implementations.
+It is worth noting that the simple graph package is included primarily to allow Gonum graph functions to be tested (a multigraph equivalent [`graph/multi`](https://pkg.go.dev/gonum.org/v1/gonum/graph/multi?tab=doc) exists for the same purpose), and that the graph implementations provided may not be the most efficient implementation for any particular graph-based problem; they are reasonably good, generally applicable and relatively simple implementations.
 
-Because we expect that users may need to implement their own graph types that satisfy the `graph` package interfaces we provide [`graph/testgraph`](https://pkg.go.dev/gonum.org/v1/gonum@v0.7.0/graph/testgraph?tab=doc), which is a set of testing routines that can be used as a framework to test a graph implementation's adherence to the Gonum graph interface definitions. An example of hoe this package is used is [here](https://github.com/gonum/gonum/blob/master/graph/simple/directed_test.go). If there is interest, a future post may go through the process of constructing tests for a new graph type using `graph/testgraph`.
+Because we expect that users may need to implement their own graph types that satisfy the `graph` package interfaces we provide [`graph/testgraph`](https://pkg.go.dev/gonum.org/v1/gonum/graph/testgraph?tab=doc), which is a set of testing routines that can be used as a framework to test a graph implementation's adherence to the Gonum graph interface definitions. An example of how this package is used is [here](https://github.com/gonum/gonum/blob/master/graph/simple/directed_test.go). If there is interest, a future post may go through the process of constructing tests for a new graph type using `graph/testgraph`.
 
 With that background out of the way, let's explore some ways that we can use Gonum graphs to solve word ladders in the general case, and then extend the problem to find extreme cases of word ladders, all while examining the performance characteristics of our implementations.
 
@@ -130,7 +130,7 @@ func main() {
 
 	// Find the shortest paths from the first word...
 	pth := path.DijkstraFrom(simple.Node(words[*first]), g)
-	// ,,, to the last word.
+	// ... to the last word.
 	ladder, _ := pth.To(words[strings.ToLower(*last)])
 
 	// Print each step in the ladder.
