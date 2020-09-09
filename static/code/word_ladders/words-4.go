@@ -27,7 +27,10 @@ func main() {
 		os.Exit(2)
 	}
 
+	// Make a new word graph.
 	wg := newWordGraph(*n)
+
+	// Read in a list of unique words from the input stream.
 	sc := bufio.NewScanner(os.Stdin)
 	for sc.Scan() {
 		wg.include(sc.Text())
@@ -67,6 +70,8 @@ func main() {
 	}
 }
 
+// wordGraph is a graph of Hamming distance-1 word paths using lazy implicit
+// edge calculation.
 type wordGraph struct {
 	n   int
 	ids map[string]int64
@@ -74,6 +79,7 @@ type wordGraph struct {
 	*simple.UndirectedGraph
 }
 
+// newWordGraph returns a new wordGraph for words of n characters.
 func newWordGraph(n int) wordGraph {
 	return wordGraph{
 		n:               n,
@@ -82,6 +88,8 @@ func newWordGraph(n int) wordGraph {
 	}
 }
 
+// include adds word to the graph and connects it to its Hamming distance-1
+// neighbours.
 func (g *wordGraph) include(word string) {
 	if len(word) != g.n || !isWord(word) {
 		return
@@ -105,6 +113,7 @@ func (g *wordGraph) include(word string) {
 	}
 }
 
+// isWord returns whether s is entirely alphabetical.
 func isWord(s string) bool {
 	for _, c := range []byte(s) {
 		if lc(c) < 'a' || 'z' < lc(c) {
@@ -114,10 +123,13 @@ func isWord(s string) bool {
 	return true
 }
 
+// lc returns the lower case of b.
 func lc(b byte) byte {
 	return b | 0x20
 }
 
+// neighbours returns a slice of string of words in the words map
+// that are within Hamming distance one from the query word.
 func neighbours(word string, words map[string]int64) []string {
 	var adj []string
 	for j := range word {
@@ -133,6 +145,8 @@ func neighbours(word string, words map[string]int64) []string {
 			w := string(b)
 			if w != word {
 				if _, ok := words[w]; ok {
+					// We have found a neighbouring word so we
+					// can add it to our list of neighbours.
 					adj = append(adj, w)
 				}
 			}
@@ -141,6 +155,7 @@ func neighbours(word string, words map[string]int64) []string {
 	return adj
 }
 
+// nodeFor returns a graph.Node representing the word for inclusion in a wordGraph.
 func (g wordGraph) nodeFor(word string) graph.Node {
 	id, ok := g.ids[word]
 	if !ok {
@@ -149,6 +164,7 @@ func (g wordGraph) nodeFor(word string) graph.Node {
 	return g.UndirectedGraph.Node(id)
 }
 
+// node is a word node in a wordGraph.
 type node struct {
 	word string
 	id   int64

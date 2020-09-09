@@ -171,6 +171,8 @@ func neighbours(word string, words map[string]int64) []string {
 			w := string(b)
 			if w != word {
 				if _, ok := words[w]; ok {
+					// We have found a neighbouring word so we
+					// can add it to our list of neighbours.
 					adj = append(adj, w)
 				}
 			}
@@ -243,6 +245,9 @@ func main() {
 		os.Exit(2)
 	}
 
+	// Make a new word graph and include the first and last
+	// words in the ladder in case they do not exists in the
+	// dictionary.
 	wg := newWordGraph(len(*first))
 	for _, p := range []*string{first, last} {
 		s := strings.ToLower(*p)
@@ -254,6 +259,7 @@ func main() {
 		wg.include(s)
 	}
 
+	// Read in a list of unique words from the input stream.
 	sc := bufio.NewScanner(os.Stdin)
 	for sc.Scan() {
 		wg.include(sc.Text())
@@ -270,13 +276,17 @@ func main() {
 	}
 }
 
+// wordGraph is a graph of Hamming distance-1 word paths. It encapsulates
+// a Gonum simple.UndirectedGraph to provide a domain-specific API for
+// handling word ladder searches.
 type wordGraph struct {
-	n   int
+	n   int // n is the length of words described by the graph.
 	ids map[string]int64
 
 	*simple.UndirectedGraph
 }
 
+// newWordGraph returns a new wordGraph for words of n characters.
 func newWordGraph(n int) wordGraph {
 	return wordGraph{
 		n:               n,
@@ -285,6 +295,8 @@ func newWordGraph(n int) wordGraph {
 	}
 }
 
+// include adds word to the graph and connects it to its Hamming distance-1
+// neighbours.
 func (g *wordGraph) include(word string) {
 	if len(word) != g.n || !isWord(word) {
 		return
@@ -308,6 +320,7 @@ func (g *wordGraph) include(word string) {
 	}
 }
 
+// isWord returns whether s is entirely alphabetical.
 func isWord(s string) bool {
 	for _, c := range []byte(s) {
 		if lc(c) < 'a' || 'z' < lc(c) {
@@ -317,6 +330,7 @@ func isWord(s string) bool {
 	return true
 }
 
+// lc returns the lower case of b.
 func lc(b byte) byte {
 	return b | 0x20
 }
@@ -328,6 +342,7 @@ func neighbours(word string, words map[string]int64) []string {
 	// in the original implementations.
 }
 
+// nodeFor returns a graph.Node representing the word for inclusion in a wordGraph.
 func (g wordGraph) nodeFor(word string) graph.Node {
 	id, ok := g.ids[word]
 	if !ok {
@@ -336,6 +351,7 @@ func (g wordGraph) nodeFor(word string) graph.Node {
 	return g.UndirectedGraph.Node(id)
 }
 
+// node is a word node in a wordGraph.
 type node struct {
 	word string
 	id   int64
@@ -389,19 +405,28 @@ $ xtime ./words-1a -first head -last tail </usr/share/dict/words
 
 Getting back to the single path problem, the next step is to see what we can do to improve the performance of the program. The observation that can drive this is that when we are constructing the graph in the naive implementation and the `wordGraph` wrapping of that approach, we perform neighbourhood calculations even for words that are unreachable from our doublet. This work will never be used. Depending on the word length and the doublet we choose this can make a reasonable difference.
 
-The main function remains the same, but `wordGraph` is replaced with the following (and goimports adjusts out import list) so that we determine neighbourhoods lazily as we reach them during the shortest path search.
+The main function remains the same, but `wordGraph` is replaced with the following (and goimports adjusts our import list) so that we determine neighbourhoods lazily as we reach them during the shortest path search.
+
+In order to lazily evaluate a word's neighbourhood we will make use of a design feature of Gonum graphs where node and edge iteration is handled by Go interface types. This allows us to replace the built in node iterator with an application-specific iterator that knows more about the nature of the graph we are working with.
+
+To do this, we need to adjust the `wordGraph` a little, adding `From` and `Edge` methods to the type and returning our new node iterator from the `From` method call.
 
 ```
+// wordGraph is a graph of Hamming distance-1 word paths using lazy implicit
+// edge calculation.
 type wordGraph struct {
 	n     int
 	words []string
 	ids   map[string]int64
 }
 
+// newWordGraph returns a new wordGraph for words of n characters.
 func newWordGraph(n int) wordGraph {
 	return wordGraph{n: n, ids: make(map[string]int64)}
 }
 
+// include adds word to the graph and connects it to its Hamming distance-1
+// neighbours.
 func (g *wordGraph) include(word string) {
 	if len(word) != g.n || !isWord(word) {
 		return
@@ -414,6 +439,7 @@ func (g *wordGraph) include(word string) {
 	g.words = append(g.words, word)
 }
 
+// isWord returns whether s is entirely alphabetical.
 func isWord(s string) bool {
 	for _, c := range []byte(s) {
 		if lc(c) < 'a' || 'z' < lc(c) {
@@ -423,10 +449,12 @@ func isWord(s string) bool {
 	return true
 }
 
+// lc returns the lower case of b.
 func lc(b byte) byte {
 	return b | 0x20
 }
 
+// nodeFor returns a graph.Node representing the word for inclusion in a wordGraph.
 func (g wordGraph) nodeFor(word string) graph.Node {
 	id, ok := g.ids[word]
 	if !ok {
@@ -435,6 +463,7 @@ func (g wordGraph) nodeFor(word string) graph.Node {
 	return node{word, id}
 }
 
+// From implements the graph.Graph From method.
 func (g wordGraph) From(id int64) graph.Nodes {
 	if uint64(id) >= uint64(len(g.words)) {
 		return graph.Empty
@@ -442,6 +471,7 @@ func (g wordGraph) From(id int64) graph.Nodes {
 	return newNeighbours(g.words[id], g.ids)
 }
 
+// Edge implements the graph.Graph Edge method.
 func (g wordGraph) Edge(uid, vid int64) graph.Edge {
 	if uid == vid {
 		return nil
@@ -461,6 +491,7 @@ func (g wordGraph) Edge(uid, vid int64) graph.Edge {
 	return edge{f: node{u, uid}, t: node{v, vid}}
 }
 
+// hamming returns the Hamming distance between the words a and b.
 func hamming(a, b string) int {
 	if len(a) != len(b) {
 		panic("word length mismatch")
@@ -473,7 +504,14 @@ func hamming(a, b string) int {
 	}
 	return d
 }
+```
 
+The node iterator itself wraps a slightly altered `neighbours` function used in the previous version with some addition methods required to allow the iterator to be used, implementing the `graph.Nodes` interface.
+
+```
+// neighbours implements the graph.Nodes interface. It is a deterministic
+// iterator over sets of nodes that represent words with Hamming distance-1
+// from a query word.
 type neighbours struct {
 	word string
 	ids  map[string]int64
@@ -483,14 +521,20 @@ type neighbours struct {
 	curr graph.Node
 }
 
-// completely deterministic - so only gives on solution
+// newNeighbours returns a new word neighbours iterator.
 func newNeighbours(word string, ids map[string]int64) *neighbours {
 	return &neighbours{word: word, ids: ids, d: 'a', buf: make([]byte, len(word))}
 }
 
+// Len implements the graph.Nodes Len method. It returns -1 to indicate the iterator
+// has an unknown number of of items.
 func (it *neighbours) Len() int { return -1 }
 
+// Next implements the graph.Nodes Next method.
 func (it *neighbours) Next() bool {
+	// The Next method is implemented using the same algorithm as used by the
+	// neighbours function in the original naive implementation of the search.
+
 	for it.j < len(it.word) {
 		for i, c := range []byte(it.word) {
 			if i == it.j {
@@ -506,6 +550,8 @@ func (it *neighbours) Next() bool {
 		}
 
 		if !bytes.Equal(it.buf, []byte(it.word)) {
+			// We have found a neighbouring word so we can return
+			// true and set the current word to this neighbour.
 			if _, ok := it.ids[string(it.buf)]; ok {
 				w := string(it.buf)
 				it.curr = node{w, it.ids[w]}
@@ -517,10 +563,13 @@ func (it *neighbours) Next() bool {
 	return false
 }
 
+// Node implements the graph.Nodes Node method.
 func (it *neighbours) Node() graph.Node { return it.curr }
 
+// Reset implements the graph.Nodes Reset method.
 func (it *neighbours) Reset() { it.j, it.d = 0, 'a' }
 
+// node is a word node in a wordGraph.
 type node struct {
 	word string
 	id   int64
@@ -529,6 +578,7 @@ type node struct {
 func (n node) ID() int64      { return n.id }
 func (n node) String() string { return n.word }
 
+// edge is a Hamming distance-1 relationship between words in a wordGraph.
 type edge struct{ f, t node }
 
 func (e edge) From() graph.Node         { return e.f }
@@ -552,6 +602,7 @@ Note that unlike the previous implementation for a single shortest path, this im
 
 A [simpler version of this](/code/word_ladders/words-2f.go) exists, that calculates a slice of neighbours for each `From` call,
 ```
+// From implements the graph.Graph From method.
 func (g wordGraph) From(id int64) graph.Nodes {
 	if uint64(id) >= uint64(len(g.words)) {
 		return graph.Empty
@@ -670,7 +721,7 @@ $ xtime ./words-4 -n 4 </usr/share/dict/words >/dev/null
 
 This is because the lazy optimisation depends on only expanding neighbourhoods once and avoiding parts that are not accessible from the given end points, but the all pairs shortest paths algorithm repeatedly expands neighbourhoods and examines the entire graph, so it makes sense to do work up front and retain the results.
 
-The learning we can take from this is that one particular graphical approach that suits one particular problem may be a poor fit for another, even closely related, problem. So an understanding of the problem that you are attempting to solve and at least a passing understanding of the algorithmic details of the functions that you plan to use are crucial for being able to choose an appropriate graph implementation. As an aside, the diversity of problems that graphs can be used to address has been the one of the biggest challenges in designing the graph packages' API.
+The learning we can take from this is that one particular graphical approach that suits one particular problem may be a poor fit for another, even closely related, problem. So an understanding of the problem that you are attempting to solve and at least a passing understanding of the algorithmic details of the functions that you plan to use are crucial for being able to choose an appropriate graph implementation. As an aside, the diversity of problems that graphs can be used to address has been one of the biggest challenges in designing the graph packages' API.
 
 For additional fun, an extension that we can look into is the widest doublet, that is the doublet with the greatest number of solutions.
 
@@ -684,6 +735,6 @@ $ xtime ./words-6 -n 4 </usr/share/dict/words >/dev/null
 
 For the record, the doublet here is "stow" and "dave", with 419 solutions.
 
-The full code for each of the word ladder programs is available from the link in the text. It depends on Gonum version 0.8.1 which added the `path.DijkstraAllFrom` function.
+The full code for each of the word ladder programs is available from the links in the text or by using `go get -d github.com/gonum/website/static/code/word_ladders`. It depends on Gonum version 0.8.1 which added the `path.DijkstraAllFrom` function.
 
 *By Dan Kortschak*

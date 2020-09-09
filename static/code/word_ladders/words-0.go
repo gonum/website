@@ -110,6 +110,8 @@ func neighbours(word string, words map[string]int64) []string {
 			w := string(b)
 			if w != word {
 				if _, ok := words[w]; ok {
+					// We have found a neighbouring word so we
+					// can add it to our list of neighbours.
 					adj = append(adj, w)
 				}
 			}
