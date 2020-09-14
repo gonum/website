@@ -29,15 +29,15 @@ This makes Gonum similar to [numpy](https://www.numpy.org) and
 [Julia](https://julialang.org/) and [Matlab](https://www.mathworks.com/)
 which are full programming languages.
 
-Gonum contains libraries for [matrices and linear algebra](https://godoc.org/gonum.org/v1/gonum/mat);
-[statistics](https://godoc.org/gonum.org/v1/gonum/stat), 
-[probability](https://godoc.org/gonum.org/v1/gonum/stat/distuv) 
-[distributions](https://godoc.org/gonum.org/v1/gonum/stat/distmv), 
-and [sampling](https://godoc.org/gonum.org/v1/gonum/stat/sampleuv); tools for
-[function differentiation](https://godoc.org/gonum.org/v1/gonum/diff/fd), 
-[integration](https://godoc.org/gonum.org/v1/gonum/integrate/quad),
-and [optimization](https://godoc.org/gonum.org/v1/gonum/optimize);
-[network](https://godoc.org/gonum.org/v1/gonum/graph) creation and analysis; and more.
+Gonum contains libraries for [matrices and linear algebra](https://pkg.go.dev/gonum.org/v1/gonum/mat);
+[statistics](https://pkg.go.dev/gonum.org/v1/gonum/stat), 
+[probability](https://pkg.go.dev/gonum.org/v1/gonum/stat/distuv) 
+[distributions](https://pkg.go.dev/gonum.org/v1/gonum/stat/distmv), 
+and [sampling](https://pkg.go.dev/gonum.org/v1/gonum/stat/sampleuv); tools for
+[function differentiation](https://pkg.go.dev/gonum.org/v1/gonum/diff/fd), 
+[integration](https://pkg.go.dev/gonum.org/v1/gonum/integrate/quad),
+and [optimization](https://pkg.go.dev/gonum.org/v1/gonum/optimize);
+[network](https://pkg.go.dev/gonum.org/v1/gonum/graph) creation and analysis; and more.
 
 ## Why use Gonum
 
@@ -133,13 +133,13 @@ without an official specification.
 ### Learning Gonum
 The best way to learn about particular packages and functions is through
 the source code documentation.
-The godoc [website](https://godoc.org) automatically generates documentation
+The godoc [website](https://pkg.go.dev) automatically generates documentation
 pages from publically available source code.
-For most Go packages (not just Gonum), going to `https://godoc.org/<package-import-path>`
+For most Go packages (not just Gonum), going to `https://pkg.go.dev/<package-import-path>`
 will give you documentation about that particular package.
-For example, `https://godoc.org/gonum.org/v1/gonum/mat` will give documentation
+For example, `https://pkg.go.dev/gonum.org/v1/gonum/mat` will give documentation
 about Gonum's matrix package, as well as documentation for specific functions.
-Go to `https://godoc.org/gonum.org/v1/gonum/graph/topo` and you will see
+Go to `https://pkg.go.dev/gonum.org/v1/gonum/graph/topo` and you will see
 documentation about our graph topology routines, for example for finding the
 "strongly connected components" of a graph.
 Note that sometimes godoc lists functions below the relevant type, for example
@@ -147,7 +147,7 @@ the function to create a new dense matrix `mat.NewDense`, is listed under the
 `Dense` type.
 At the bottom of the index you will see a list of specific code examples,
 and at the very bottom of the godoc page, you can see a list of subpackages,
-if any (for instance, scroll to the bottom of `https://godoc.org/gonum.org/v1/gonum/stat`).
+if any (for instance, scroll to the bottom of `https://pkg.go.dev/gonum.org/v1/gonum/stat`).
 
 Please also check future posts on this blog for extended commentary on Gonum
 packages and their effective use.

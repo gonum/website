@@ -59,15 +59,15 @@ user_groups:
 Gonum is a set of packages designed to make writing numerical and scientific
 algorithms productive, performant, and scalable.
 
-Gonum contains libraries for [matrices and linear algebra](https://godoc.org/gonum.org/v1/gonum/mat);
-[statistics](https://godoc.org/gonum.org/v1/gonum/stat), 
-[probability](https://godoc.org/gonum.org/v1/gonum/stat/distuv) 
-[distributions](https://godoc.org/gonum.org/v1/gonum/stat/distmv), 
-and [sampling](https://godoc.org/gonum.org/v1/gonum/stat/sampleuv); tools for
-[function differentiation](https://godoc.org/gonum.org/v1/gonum/diff/fd), 
-[integration](https://godoc.org/gonum.org/v1/gonum/integrate/quad),
-and [optimization](https://godoc.org/gonum.org/v1/gonum/optimize);
-[network](https://godoc.org/gonum.org/v1/gonum/graph) creation and analysis; and more.
+Gonum contains libraries for [matrices and linear algebra](https://pkg.go.dev/gonum.org/v1/gonum/mat);
+[statistics](https://pkg.go.dev/gonum.org/v1/gonum/stat), 
+[probability](https://pkg.go.dev/gonum.org/v1/gonum/stat/distuv) 
+[distributions](https://pkg.go.dev/gonum.org/v1/gonum/stat/distmv), 
+and [sampling](https://pkg.go.dev/gonum.org/v1/gonum/stat/sampleuv); tools for
+[function differentiation](https://pkg.go.dev/gonum.org/v1/gonum/diff/fd), 
+[integration](https://pkg.go.dev/gonum.org/v1/gonum/integrate/quad),
+and [optimization](https://pkg.go.dev/gonum.org/v1/gonum/optimize);
+[network](https://pkg.go.dev/gonum.org/v1/gonum/graph) creation and analysis; and more.
 
 We encourage you to [get started](post/intro_to_gonum) with Go and Gonum if
 

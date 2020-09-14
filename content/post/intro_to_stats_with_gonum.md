@@ -9,7 +9,7 @@ summary = "The first of a series of short posts providing an introduction and co
 _The following was cross-posted (with minor changes) from [sbinet.github.io/posts/2017-10-04-intro-to-stats-with-gonum](https://sbinet.github.io/posts/2017-10-04-intro-to-stats-with-gonum/)_
 
 This is the first of a series of short posts providing an introduction and code examples for using the Gonum packages.
-This first post focuses on computing basic statistics using the [stat](https://godoc.org/gonum.org/v1/gonum/stat) package.
+This first post focuses on computing basic statistics using the [stat](https://pkg.go.dev/gonum.org/v1/gonum/stat) package.
 
 This first post is based off the content of this blog post:
 
@@ -108,7 +108,7 @@ uses the unbiased sample variance (_ie:_ the divisor is `len(xs)-1`):
 16.891029423927957
 ```
 
-If one wants the uncorrected estimator, [stat.Moment](https://godoc.org/gonum.org/v1/gonum/stat#Moment) can be used instead.
+If one wants the uncorrected estimator, [stat.Moment](https://pkg.go.dev/gonum.org/v1/gonum/stat#Moment) can be used instead.
 
 With this quite blunt tool, we can analyse some real data from real life.
 We will use a dataset pertaining to the salary of European developers, all 1147 of them :).
