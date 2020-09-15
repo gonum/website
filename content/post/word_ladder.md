@@ -182,16 +182,16 @@ func neighbours(word string, words map[string]int64) []string {
 }
 ```
 
-Running [this code](/code/word_ladders/words-0.go) with Carroll's example gives us an answer in 0.09s, using \~8.5MB. (`xtime` is defined [here](https://blog.golang.org/pprof), `/usr/share/dict/words` is provided by the Ubuntu wamerican package.)
+Running [this code](/code/word_ladders/words-0/main.go) with Carroll's example gives us an answer in 0.09s, using \~8.5MB. (`xtime` is defined [here](https://blog.golang.org/pprof), `/usr/share/dict/words` is provided by the Ubuntu wamerican package.)
 ```
-$ xtime ./words-0 -first head -last tail </usr/share/dict/words
+$ xtime words-0 -first head -last tail </usr/share/dict/words
 head
 heal
 teal
 tell
 tall
 tail
-0.08u 0.00s 0.07r 8516kB ./words-0 -first head -last tail
+0.08u 0.00s 0.07r 8516kB words-0 -first head -last tail
 ```
 
 This implementation certainly works, but the business logic is spread thoughout the input handling and the main loop, so we can clean it up by using the fact that the graph package work with interface values. To do this, we will define a new graph type that holds nodes that are aware of the word that they represent.
@@ -364,16 +364,16 @@ Although the logic is almost identical, the line count is higher, this however c
 
 An important aspect of the implementation is that the concrete type wrapping the `*simple.UndirectedGraph` adds domain-specific API that means the client code does not need to deal with the graph, but makes the graph API available to the path-finding function. This is a design intention for the graph packages.
 
-Running [the new version](/code/word_ladders/words-1.go) gives us the same performance.
+Running [the new version](/code/word_ladders/words-1/main.go) gives us the same performance.
 ```
-$ xtime ./words-1 -first head -last tail </usr/share/dict/words
+$ xtime words-1 -first head -last tail </usr/share/dict/words
 head
 heal
 hell
 tell
 tall
 tail
-0.07u 0.01s 0.06r 9008kB ./words-1 -first head -last tail
+0.07u 0.01s 0.06r 9008kB words-1 -first head -last tail
 ```
 
 If you have run the code, you will notice that you won't necessarily get the word ladder matching the one here; there are multiple co-equal shortest paths between "head" and "tail". `gonum/path` provides a way to find all shortest paths between a pair of node which requires only a minor alteration of the code. Instead of calling `path.DijkstraFrom` we'll use [`path.DijkstraAllFrom`](https://pkg.go.dev/gonum.org/v1/gonum/graph/path?tab=doc#DijkstraAllFrom) and loop over the slice of paths returned by [`pth.AllTo`](https://pkg.go.dev/gonum.org/v1/gonum/graph/path?tab=doc#DijkstraAllFrom.AllTo).
@@ -387,9 +387,9 @@ If you have run the code, you will notice that you won't necessarily get the wor
 	}
 ```
 
-[This](/code/word_ladders/words-1a.go) now gives us all the shortest word ladders from "head" to "tail".
+[This](/code/word_ladders/words-1a/main.go) now gives us all the shortest word ladders from "head" to "tail".
 ```
-$ xtime ./words-1a -first head -last tail </usr/share/dict/words
+$ xtime words-1a -first head -last tail </usr/share/dict/words
 [head read reid raid rail tail]
 [head heal neal neil nail tail]
 [head heal teal tell tall tail]
@@ -400,7 +400,7 @@ $ xtime ./words-1a -first head -last tail </usr/share/dict/words
 [head hear heir hair hail tail]
 [head held hell hall hail tail]
 [head heal hell hall hail tail]
-0.07u 0.00s 0.07r 8876kB ./words-1a -first head -last tail
+0.07u 0.00s 0.07r 8876kB words-1a -first head -last tail
 ```
 
 Getting back to the single path problem, the next step is to see what we can do to improve the performance of the program. The observation that can drive this is that when we are constructing the graph in the naive implementation and the `wordGraph` wrapping of that approach, we perform neighbourhood calculations even for words that are unreachable from our doublet. This work will never be used. Depending on the word length and the doublet we choose this can make a reasonable difference.
@@ -586,21 +586,21 @@ func (e edge) To() graph.Node           { return e.t }
 func (e edge) ReversedEdge() graph.Edge { return edge{f: e.t, t: e.f} }
 ```
 
-[Here](/code/word_ladders/words-2.go) we see a good improvement.
+[Here](/code/word_ladders/words-2/main.go) we see a good improvement.
 ```
-$ xtime ./words-2 -first head -last tail </usr/share/dict/words
+$ xtime words-2 -first head -last tail </usr/share/dict/words
 head
 heal
 neal
 neil
 nail
 tail
-0.04u 0.00s 0.05r 6472kB ./words-2 -first head -last tail
+0.04u 0.00s 0.05r 6472kB words-2 -first head -last tail
 ```
 
 Note that unlike the previous implementation for a single shortest path, this implementation will always output the same result since the `*neighbours` iterator here is completely deterministic.
 
-A [simpler version of this](/code/word_ladders/words-2f.go) exists, that calculates a slice of neighbours for each `From` call,
+A [simpler version of this](/code/word_ladders/words-2f/main.go) exists, that calculates a slice of neighbours for each `From` call,
 ```
 // From implements the graph.Graph From method.
 func (g wordGraph) From(id int64) graph.Nodes {
@@ -637,15 +637,15 @@ func neighbours(word string, words map[string]int64) []graph.Node {
 ```
 but has worse performance characteristics.
 ```
-$ xtime ./words-2f -first head -last tail </usr/share/dict/words >/dev/null
-0.07u 0.00s 0.07r 7276kB ./words-2f -first head -last tail
+$ xtime words-2f -first head -last tail </usr/share/dict/words >/dev/null
+0.07u 0.00s 0.07r 7276kB words-2f -first head -last tail
 ```
 
-[Again](/code/word_ladders/words-2a.go), we can obtain all possible ladders for the doublet with the change to `path.DijkstraAllFrom` with performance that still beats the naive implementation.
+[Again](/code/word_ladders/words-2a/main.go), we can obtain all possible ladders for the doublet with the change to `path.DijkstraAllFrom` with performance that still beats the naive implementation.
 
 ```
-$ xtime ./words-2a -first head -last tail </usr/share/dict/words >/dev/null
-0.05u 0.00s 0.04r 6964kB ./words-2a -first head -last tail
+$ xtime words-2a -first head -last tail </usr/share/dict/words >/dev/null
+0.05u 0.00s 0.04r 6964kB words-2a -first head -last tail
 ```
 
 So it seems that we have an answer, we should use the lazy neighbourhood approach.
@@ -689,9 +689,9 @@ and replacing the flags we accept.
 
 This change can be made to either the implicit lazy implementation or the eager approach.
 
-However, the [lazy approach](/code/word_ladders/words-3.go)
+However, the [lazy approach](/code/word_ladders/words-3/main.go)
 ```
-$ xtime ./words-3 -n 4 </usr/share/dict/words
+$ xtime words-3 -n 4 </usr/share/dict/words
 19
 [inca inch itch etch each bach bath oath oats opts opus onus anus ants ante anne acne ache achy ashy]
 [inca inch itch etch each mach math oath oats opts opus onus anus ants ante anne acne ache achy ashy]
@@ -711,12 +711,12 @@ $ xtime ./words-3 -n 4 </usr/share/dict/words
 [chum chug thug thud thad than khan klan alan alas alms alma elma erma erna edna edda eddy edgy edge]
 [edge edgy eddy edda edna erna erma elma elms alms aims sims sums sues suet suit quit quid quad quay]
 [edge edgy eddy edda edna erna erma elma alma alms aims sims sums sues suet suit quit quid quad quay]
-87.07u 0.44s 75.44r 947092kB ./words-3 -n 4
+87.07u 0.44s 75.44r 947092kB words-3 -n 4
 ```
-is handily beaten by the [eager approach](/code/word_ladders/words-4.go).
+is handily beaten by the [eager approach](/code/word_ladders/words-4/main.go).
 ```
-$ xtime ./words-4 -n 4 </usr/share/dict/words >/dev/null
-28.22u 0.34s 23.36r 863496kB ./words-4 -n 4
+$ xtime words-4 -n 4 </usr/share/dict/words >/dev/null
+28.22u 0.34s 23.36r 863496kB words-4 -n 4
 ```
 
 This is because the lazy optimisation depends on only expanding neighbourhoods once and avoiding parts that are not accessible from the given end points, but the all pairs shortest paths algorithm repeatedly expands neighbourhoods and examines the entire graph, so it makes sense to do work up front and retain the results.
@@ -725,16 +725,16 @@ The learning we can take from this is that one particular graphical approach tha
 
 For additional fun, an extension that we can look into is the widest doublet, that is the doublet with the greatest number of solutions.
 
-Again, the [lazy implementation](/code/word_ladders/words-5.go) is beaten by the [eager naive implementation](/code/word_ladders/words-6.go).
+Again, the [lazy implementation](/code/word_ladders/words-5/main.go) is beaten by the [eager naive implementation](/code/word_ladders/words-6/main.go).
 ```
-$ xtime ./words-5 -n 4 </usr/share/dict/words >/dev/null
-769.18u 2.34s 210.60r 2170600kB ./words-5 -n 4
-$ xtime ./words-6 -n 4 </usr/share/dict/words >/dev/null
-663.70u 2.38s 157.56r 2059916kB ./words-6 -n 4
+$ xtime words-5 -n 4 </usr/share/dict/words >/dev/null
+769.18u 2.34s 210.60r 2170600kB words-5 -n 4
+$ xtime words-6 -n 4 </usr/share/dict/words >/dev/null
+663.70u 2.38s 157.56r 2059916kB words-6 -n 4
 ```
 
 For the record, the doublet here is "stow" and "dave", with 419 solutions.
 
-The full code for each of the word ladder programs is available from the links in the text or by using `go get -d github.com/gonum/website/static/code/word_ladders`. It depends on Gonum version 0.8.1 which added the `path.DijkstraAllFrom` function.
+The full code for each of the word ladder programs is available from the links in the text or by using `go get github.com/gonum/website/static/code/word_ladders/...`. It depends on Gonum version 0.8.1 which added the `path.DijkstraAllFrom` function.
 
 *By Dan Kortschak*
