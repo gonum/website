@@ -1,0 +1,5 @@
+# Redirect attempts to get to docs to a more helpful location.
+/v1/gonum/*	https://pkg.go.dev/gonum.org/v1/gonum/	302
+/v1/plot/*	https://pkg.go.dev/gonum.org/v1/plot/	302
+/v1/netlib/*	https://pkg.go.dev/gonum.org/v1/netlib/	302
+/v1/exp/*	https://pkg.go.dev/gonum.org/v1/exp/	302
