@@ -1,0 +1,57 @@
+{{- define "main" -}}
+
+<!-- redirection to pkg.go.dev documentation -->
+<script type="text/javascript">
+  let base = window.location.protocol + "//" + window.location.host;
+
+  trimTrailingSlash = function(str) {
+    return str.replace(/\/+$/, "")
+  }
+
+  window.onload = function() {
+    const prefixes = [
+      "/v1/gonum/",
+      "/v1/plot/",
+      "/v1/netlib/",
+      "/v1/hdf5/",
+      "/v1/tools/",
+      "/v1/exp/"
+    ];
+    prefixes.forEach(prefix => {
+      if (window.location.href.startsWith(base+prefix) || window.location.href == trimTrailingSlash(base+prefix)) {
+          let docURL = window.location.href.replace(base, window.location.protocol + "//pkg.go.dev/gonum.org")
+          window.location.replace(docURL);
+        }
+    });
+  }
+</script>
+
+<div class="universal-wrapper pt-3">
+
+  <h1>{{ i18n "page_not_found" }}</h1>
+
+  {{/* Show search box if Academic's search engine is enabled. */}}
+  {{ if eq site.Params.search.engine 1 }}
+  <form class="d-flex align-items-center mb-3">
+    <input name="q" type="search" class="form-control" placeholder="{{ i18n "search_placeholder" }}" autocomplete="off">
+  </form>
+  {{ end }}
+
+  {{/* Suggest recently published pages to the user. */}}
+
+  <p>{{ i18n "404_recommendations" }}</p>
+
+  {{ $query := site.RegularPages }}
+  {{ $count := len $query }}
+  {{ if gt $count 0 }}
+  <h2>{{ i18n "user_profile_latest" }}</h2>
+  <ul>
+    {{ range first 10 $query }}
+      <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+    {{ end }}
+  </ul>
+  {{ end }}
+
+</div>
+
+{{- end -}}
