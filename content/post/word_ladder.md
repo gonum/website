@@ -194,7 +194,7 @@ tail
 0.08u 0.00s 0.07r 8516kB words-0 -first head -last tail
 ```
 
-This implementation certainly works, but the business logic is spread thoughout the input handling and the main loop, so we can clean it up by using the fact that the graph package work with interface values. To do this, we will define a new graph type that holds nodes that are aware of the word that they represent.
+This implementation certainly works, but the business logic is spread thoughout the input handling and the main loop, so we can clean it up by using the fact that the graph packages work with interface values. To do this, we will define a new graph type that holds nodes that are aware of the word that they represent.
 
 The `wordGraph` type still makes use of a Gonum simple graph implementation and the logic of the calculation is essentially identical.
 
