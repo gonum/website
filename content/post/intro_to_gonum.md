@@ -101,18 +101,20 @@ decisions for specific packages.
 First, you need to [install Go](https://golang.org/doc/install) if it is not
 already installed on your machine.
 It is recommended that you use the most recent version of Go.
-Run 
+Within your [module](https://golang.org/ref/mod) run
 ```
-go get -u -t gonum.org/v1/gonum/...
+go get gonum.org/v1/gonum@latest
 ```
-to download the main set of Gonum packages.
+to download the main set of Gonum packages into the package cache and set the Gonum dependency in your go.mod file.
 That's it!
 
-You can test that everything is working properly with 
+You can test that everything is working properly from within your module with 
 ```
-go test gonum.org/v1/...
+go test gonum.org/v1/gonum
 ```
-This will take a few minutes.
+You may be asked to update you go.mod file by the compiler a few times; it will ask you to add dependencies with `go get`.
+Follow these instructions.
+Running the tests will take a few minutes.
 Packages should all have an "ok" or "?" next to them.
 While the tests are running, please feel free to browse the source code!
 
